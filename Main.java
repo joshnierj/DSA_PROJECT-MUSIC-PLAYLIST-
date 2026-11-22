@@ -22,8 +22,47 @@ public class Main {
 
         Song head, tail, current;
 
+        // Loads starting data so every menu option can be tested right away
+        void loadSampleData() {
+            int[] numbers = {101, 102, 103, 104, 105, 106};
+            String[] names = {
+                "Blinding Lights - The Weeknd",
+                "Shape of You - Ed Sheeran",
+                "Levitating - Dua Lipa",
+                "Bad Guy - Billie Eilish",
+                "Perfect - Ed Sheeran",
+                "Stay - The Kid LAROI & Justin Bieber"
+            };
+            int[] durations = {200, 234, 203, 194, 263, 141};
+
+            for (int i = 0; i < numbers.length; i++) {
+                Song s = new Song(numbers[i], names[i], durations[i]);
+
+                if (head == null) {
+                    head = tail = current = s;
+                } else {
+                    tail.next = s;
+                    s.prev = tail;
+                    tail = s;
+                }
+            }
+        }
+
         // 1. Add Song
         void addSong(int songNumber, String songName, int songDuration) {
+
+            if (songNumber <= 0) {
+                System.out.println("Song Number must be greater than zero!");
+                return;
+            }
+            if (songName == null || songName.trim().isEmpty()) {
+                System.out.println("Song name cannot be empty!");
+                return;
+            }
+            if (songDuration <= 0) {
+                System.out.println("Duration must be greater than zero!");
+                return;
+            }
 
             // Check for duplicate Song Number
             Song temp = head;
@@ -35,16 +74,10 @@ public class Main {
                 temp = temp.next;
             }
 
-            if (songDuration <= 0) {
-                System.out.println("Duration must be greater than zero!");
-                return;
-            }
-
-            Song newSong = new Song(songNumber, songName, songDuration);
+            Song newSong = new Song(songNumber, songName.trim(), songDuration);
 
             if (head == null) {
-                head = tail = newSong;
-                current = newSong;
+                head = tail = current = newSong;
             } else {
                 tail.next = newSong;
                 newSong.prev = tail;
@@ -57,45 +90,35 @@ public class Main {
         // 2. Delete Song
         public void deleteSong(int songNumber) {
 
-            // Case 1: playlist is empty
             if (head == null) {
                 System.out.println("Playlist is empty!");
                 return;
             }
 
-            // Search for the song with this song number
             Song temp = head;
             while (temp != null && temp.songNumber != songNumber) {
                 temp = temp.next;
             }
 
-            // Case 2: song number not found
             if (temp == null) {
                 System.out.println("Song Number not found!");
                 return;
             }
 
-            // If the song being deleted is the current song, move current to a neighbor
+            // If deleting the current song, move current to a neighbor
             if (temp == current) {
                 current = (temp.next != null) ? temp.next : temp.prev;
             }
 
-            // Case 3: it's the only song
             if (temp == head && temp == tail) {
                 head = tail = null;
-            }
-            // Case 4: deleting the first song
-            else if (temp == head) {
+            } else if (temp == head) {
                 head = head.next;
                 head.prev = null;
-            }
-            // Case 5: deleting the last song
-            else if (temp == tail) {
+            } else if (temp == tail) {
                 tail = tail.prev;
                 tail.next = null;
-            }
-            // Case 6: deleting a song in the middle
-            else {
+            } else {
                 temp.prev.next = temp.next;
                 temp.next.prev = temp.prev;
             }
@@ -125,28 +148,53 @@ public class Main {
             System.out.println("Song not found!");
         }
 
-        // 4. Display Playlist
+        // 4. Display Playlist (visible structure)
         public void displayPlaylist() {
 
             if (head == null) {
-                System.out.println("  Playlist is empty!");
-                System.out.println("  Time complexity: O(1)");
+                System.out.println("\n  HEAD -> NULL");
+                System.out.println("  TAIL -> NULL");
+                System.out.println("  (Playlist is empty)");
                 return;
             }
 
-            System.out.println("  HEAD");
+            // Part 1: chain overview with arrows between nodes
+            System.out.println("\n  Structure (doubly linked list):");
+            StringBuilder chain = new StringBuilder("  NULL <- ");
+            Song temp = head;
+            while (temp != null) {
+                chain.append("[").append(temp.songNumber).append("]");
+                if (temp.next != null) {
+                    chain.append(" <--> ");
+                }
+                temp = temp.next;
+            }
+            chain.append(" -> NULL");
+            System.out.println(chain);
+            System.out.println("  HEAD = [" + head.songNumber + "]   TAIL = [" + tail.songNumber + "]"
+                    + (current != null ? "   CURRENT = [" + current.songNumber + "]" : ""));
+
+            // Part 2: detailed vertical view with markers
+            System.out.println("\n  HEAD");
             System.out.println("   |");
             System.out.println("   v");
 
-            Song temp = head;
+            temp = head;
             int position = 1;
 
             while (temp != null) {
+                StringBuilder markers = new StringBuilder();
+                if (temp == head)    markers.append(" <-- HEAD");
+                if (temp == tail)    markers.append(" <-- TAIL");
+                if (temp == current) markers.append(" <-- CURRENT");
+
                 System.out.println("  (" + position + ") [" + temp.songNumber + "] "
-                        + temp.songName + " (" + temp.duration + "s)");
+                        + temp.songName + " (" + temp.duration + "s)" + markers);
 
                 if (temp.next != null) {
-                    System.out.println("     <-->");
+                    System.out.println("       ^ |");
+                    System.out.println("  prev | | next");
+                    System.out.println("       | v");
                 }
 
                 temp = temp.next;
@@ -155,8 +203,7 @@ public class Main {
 
             System.out.println("   |");
             System.out.println("   v");
-            System.out.println("  TAIL -> NULL");
-            System.out.println("  Time complexity: O(n)");
+            System.out.println("  TAIL -> next = NULL");
         }
 
         // 5. Play Song
@@ -174,7 +221,7 @@ public class Main {
                     System.out.println("\nNow Playing:");
                     System.out.println("Song Number : " + temp.songNumber);
                     System.out.println("Song Name   : " + temp.songName);
-                    System.out.println("Duration    : " + temp.duration);
+                    System.out.println("Duration    : " + temp.duration + " seconds");
                     return;
                 }
                 temp = temp.next;
@@ -219,12 +266,6 @@ public class Main {
 
         // 8. Count Total Songs
         public void countTotalSongs() {
-            if (head == null) {
-                System.out.println("\nThe playlist is empty. Total songs: 0");
-                System.out.println("Time: O(1)");
-                return;
-            }
-
             int count = 0;
             Song temp = head;
             while (temp != null) {
@@ -233,13 +274,77 @@ public class Main {
             }
 
             System.out.println("\nTotal songs in the playlist: " + count);
-            System.out.println("Time: O(n)");
         }
     }
+
+    // ---------- Complexity printer ----------
+
+    static void showComplexity(String operation, String complexity, String reason) {
+        System.out.println("--------------------------------");
+        System.out.println("Operation : " + operation);
+        System.out.println("Time      : " + complexity);
+        System.out.println("Reason    : " + reason);
+        System.out.println("--------------------------------");
+    }
+
+    // ---------- Safe input helpers ----------
+
+    // Keeps asking until the user types a valid whole number.
+    // Returns null only if input has ended (e.g., Ctrl+D), so the program exits cleanly.
+    static Integer readInt(Scanner sc, String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            if (!sc.hasNextLine()) {
+                return null;
+            }
+            String line = sc.nextLine().trim();
+
+            if (line.isEmpty()) {
+                System.out.println("Input cannot be empty. Please enter a whole number.");
+                continue;
+            }
+            try {
+                return Integer.parseInt(line);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input! '" + line + "' is not a valid whole number.");
+            }
+        }
+    }
+
+    // Keeps asking until the user types non-blank text.
+    static String readText(Scanner sc, String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            if (!sc.hasNextLine()) {
+                return null;
+            }
+            String line = sc.nextLine().trim();
+
+            if (line.isEmpty()) {
+                System.out.println("Input cannot be empty. Please try again.");
+                continue;
+            }
+            return line;
+        }
+    }
+
+    // Keeps asking until the number is greater than zero.
+    static Integer readPositiveInt(Scanner sc, String prompt) {
+        while (true) {
+            Integer value = readInt(sc, prompt);
+            if (value == null) return null;
+            if (value > 0) return value;
+            System.out.println("Value must be greater than zero. Please try again.");
+        }
+    }
+
+    // ---------- Main ----------
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         MusicPlaylist playlist = new MusicPlaylist();
+        playlist.loadSampleData();
+        System.out.println("Loaded 6 sample songs at startup.");
         boolean running = true;
 
         while (running) {
@@ -256,62 +361,83 @@ public class Main {
             System.out.println("[8] Count Total Songs");
             System.out.println("[9] Exit");
             System.out.println("================================");
-            System.out.print("Enter your choice: ");
-            int choice = sc.nextInt();
+
+            Integer choice = readInt(sc, "Enter your choice: ");
+            if (choice == null) break; // input stream closed
 
             switch (choice) {
-                case 1:
-                    System.out.print("Enter Song Number: ");
-                    int songNumber = sc.nextInt();
-                    sc.nextLine(); // consume leftover newline
-                    System.out.print("Enter Song Name & Artist Name: ");
-                    String songName = sc.nextLine();
-                    System.out.print("Enter Song Duration (seconds): ");
-                    int songDuration = sc.nextInt();
+                case 1: {
+                    Integer songNumber = readPositiveInt(sc, "Enter Song Number: ");
+                    if (songNumber == null) { running = false; break; }
+                    String songName = readText(sc, "Enter Song Name & Artist Name: ");
+                    if (songName == null) { running = false; break; }
+                    Integer songDuration = readPositiveInt(sc, "Enter Song Duration (seconds): ");
+                    if (songDuration == null) { running = false; break; }
                     playlist.addSong(songNumber, songName, songDuration);
+                    showComplexity("Add Song", "O(n)",
+                            "scans the list for a duplicate Song Number; linking at the tail is O(1)");
                     break;
+                }
 
-                case 2:
-                    System.out.print("Enter Song Number to delete: ");
-                    int deleteNumber = sc.nextInt();
+                case 2: {
+                    Integer deleteNumber = readInt(sc, "Enter Song Number to delete: ");
+                    if (deleteNumber == null) { running = false; break; }
                     playlist.deleteSong(deleteNumber);
+                    showComplexity("Delete Song", "O(n)",
+                            "searches for the song; unlinking the node is O(1)");
                     break;
+                }
 
-                case 3:
-                    System.out.print("Enter Song Number to search: ");
-                    int searchNumber = sc.nextInt();
+                case 3: {
+                    Integer searchNumber = readInt(sc, "Enter Song Number to search: ");
+                    if (searchNumber == null) { running = false; break; }
                     playlist.searchSong(searchNumber);
+                    showComplexity("Search Song", "O(n)",
+                            "linear search from head (best case O(1) if it is the first song)");
                     break;
+                }
 
                 case 4:
                     playlist.displayPlaylist();
+                    showComplexity("Display Playlist", "O(n)",
+                            "visits every node once");
                     break;
 
-                case 5:
-                    System.out.print("Enter Song Number to play: ");
-                    int playNumber = sc.nextInt();
+                case 5: {
+                    Integer playNumber = readInt(sc, "Enter Song Number to play: ");
+                    if (playNumber == null) { running = false; break; }
                     playlist.playSong(playNumber);
+                    showComplexity("Play Song", "O(n)",
+                            "linear search for the song; setting current is O(1)");
                     break;
+                }
 
                 case 6:
                     playlist.nextSong();
+                    showComplexity("Next Song", "O(1)",
+                            "follows one next pointer");
                     break;
 
                 case 7:
                     playlist.previousSong();
+                    showComplexity("Previous Song", "O(1)",
+                            "follows one prev pointer");
                     break;
 
                 case 8:
                     playlist.countTotalSongs();
+                    showComplexity("Count Total Songs", "O(n)",
+                            "walks the whole list (a stored counter would make it O(1))");
                     break;
 
                 case 9:
                     System.out.println("Exiting playlist. Goodbye!");
+                    showComplexity("Exit", "O(1)", "no traversal needed");
                     running = false;
                     break;
 
                 default:
-                    System.out.println("Invalid choice! Please enter 1-9.");
+                    System.out.println("Invalid choice! Please enter a number from 1 to 9.");
             }
         }
 
