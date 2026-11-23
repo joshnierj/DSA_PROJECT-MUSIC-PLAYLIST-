@@ -156,7 +156,6 @@ public class Playlist {
 
             if (head == null) {
                 System.out.println("  Playlist is empty!");
-                System.out.println("  Time complexity: O(1)");
                 return;
             }
 
@@ -182,7 +181,6 @@ public class Playlist {
             System.out.println("   |");
             System.out.println("   v");
             System.out.println("  TAIL -> NULL");
-            System.out.println("  Time complexity: O(n)");
         }
 
         // 5. Play Song
@@ -245,12 +243,6 @@ public class Playlist {
 
         // 8. Count Total Songs
         public void countTotalSongs() {
-            if (head == null) {
-                System.out.println("\nThe playlist is empty. Total songs: 0");
-                System.out.println("Time: O(1)");
-                return;
-            }
-
             int count = 0;
             Song temp = head;
             while (temp != null) {
@@ -259,8 +251,12 @@ public class Playlist {
             }
 
             System.out.println("\nTotal songs in the playlist: " + count);
-            System.out.println("Time: O(n)");
         }
+    }
+
+    // Prints only the time complexity
+    static void showComplexity(String complexity) {
+        System.out.println("  Time complexity: " + complexity);
     }
 
     public static void main(String[] args) {
@@ -274,15 +270,15 @@ public class Playlist {
             System.out.println("\n================================");
             System.out.println("         MUSIC PLAYLIST");
             System.out.println("================================");
-            System.out.println("[1] Add Song");
-            System.out.println("[2] Delete Song");
-            System.out.println("[3] Search Song");
-            System.out.println("[4] Display Playlist");
-            System.out.println("[5] Play Song");
-            System.out.println("[6] Next Song");
-            System.out.println("[7] Previous Song");
-            System.out.println("[8] Count Total Songs");
-            System.out.println("[9] Exit");
+            System.out.println("1 Add Song");
+            System.out.println("2 Delete Song");
+            System.out.println("3 Search Song");
+            System.out.println("4 Display Playlist");
+            System.out.println("5 Play Song");
+            System.out.println("6 Next Song");
+            System.out.println("7 Previous Song");
+            System.out.println("8 Count Total Songs");
+            System.out.println("9 Exit");
             System.out.println("================================");
             System.out.print("Enter your choice: ");
             int choice = sc.nextInt();
@@ -297,44 +293,53 @@ public class Playlist {
                     System.out.print("Enter Song Duration (seconds): ");
                     int songDuration = sc.nextInt();
                     playlist.addSong(songNumber, songName, songDuration);
+                    showComplexity("O(n)");
                     break;
 
                 case 2:
                     System.out.print("Enter Song Number to delete: ");
                     int deleteNumber = sc.nextInt();
                     playlist.deleteSong(deleteNumber);
+                    showComplexity("O(n)");
                     break;
 
                 case 3:
                     System.out.print("Enter Song Number to search: ");
                     int searchNumber = sc.nextInt();
                     playlist.searchSong(searchNumber);
+                    showComplexity("O(n)");
                     break;
 
                 case 4:
                     playlist.displayPlaylist();
+                    showComplexity("O(n)");
                     break;
 
                 case 5:
                     System.out.print("Enter Song Number to play: ");
                     int playNumber = sc.nextInt();
                     playlist.playSong(playNumber);
+                    showComplexity("O(n)");
                     break;
 
                 case 6:
                     playlist.nextSong();
+                    showComplexity("O(1)");
                     break;
 
                 case 7:
                     playlist.previousSong();
+                    showComplexity("O(1)");
                     break;
 
                 case 8:
                     playlist.countTotalSongs();
+                    showComplexity("O(n)");
                     break;
 
                 case 9:
                     System.out.println("Exiting playlist. Goodbye!");
+                    showComplexity("O(1)");
                     running = false;
                     break;
 
