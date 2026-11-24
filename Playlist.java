@@ -26,12 +26,12 @@ public class Playlist {
         void loadSampleData() {
             int[] numbers = {101, 102, 103, 104, 105, 106};
             String[] names = {
-                "Blinding Lights - The Weeknd",
-                "Shape of You - Ed Sheeran",
-                "Levitating - Dua Lipa",
-                "Bad Guy - Billie Eilish",
-                "Perfect - Ed Sheeran",
-                "Stay - The Kid LAROI & Justin Bieber"
+                "Blinding Lights - The Weeknd ",
+                "Shape of You - Ed Sheeran ",
+                "Levitating - Dua Lipa ",
+                "Bad Guy - Billie Eilish ",
+                "Perfect - Ed Sheeran ",
+                "Stay - The Kid LAROI & Justin Bieber "
             };
             int[] durations = {200, 234, 203, 194, 263, 141};
 
