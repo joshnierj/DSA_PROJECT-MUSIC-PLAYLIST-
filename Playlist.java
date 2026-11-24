@@ -267,24 +267,24 @@ public class Playlist {
         boolean running = true;
 
         while (running) {
-            System.out.println("\n================================");
-            System.out.println("         MUSIC PLAYLIST");
-            System.out.println("================================");
-            System.out.println("1 Add Song");
-            System.out.println("2 Delete Song");
-            System.out.println("3 Search Song");
-            System.out.println("4 Display Playlist");
-            System.out.println("5 Play Song");
-            System.out.println("6 Next Song");
-            System.out.println("7 Previous Song");
-            System.out.println("8 Count Total Songs");
-            System.out.println("9 Exit");
-            System.out.println("================================");
+            System.out.println("----------------------------------------------------");
+            System.out.println("         MUSIC PLAYLIST by Jared & Friends ");
+            System.out.println("----------------------------------------------------");
+            System.out.println("Add Song");
+            System.out.println("Delete Song");
+            System.out.println("Search Song");
+            System.out.println("Display Playlist");
+            System.out.println("Play Song");
+            System.out.println("Next Song");
+            System.out.println("Previous Song");
+            System.out.println("Count Total Songs");
+            System.out.println("Exit");
+            System.out.println("----------------------------------------------------");
             System.out.print("Enter your choice: ");
-            int choice = sc.nextInt();
+            String choice = sc.nextLine();
 
             switch (choice) {
-                case 1:
+                case "Add Song":
                     System.out.print("Enter Song Number: ");
                     int songNumber = sc.nextInt();
                     sc.nextLine(); // consume leftover newline
@@ -292,62 +292,67 @@ public class Playlist {
                     String songName = sc.nextLine();
                     System.out.print("Enter Song Duration (seconds): ");
                     int songDuration = sc.nextInt();
+                    sc.nextLine(); 
                     playlist.addSong(songNumber, songName, songDuration);
                     showComplexity("O(n)");
                     break;
 
-                case 2:
+                case "Delete Song":
                     System.out.print("Enter Song Number to delete: ");
                     int deleteNumber = sc.nextInt();
+                    sc.nextLine(); 
                     playlist.deleteSong(deleteNumber);
                     showComplexity("O(n)");
                     break;
 
-                case 3:
+                case "Search Song":
                     System.out.print("Enter Song Number to search: ");
                     int searchNumber = sc.nextInt();
+                    sc.nextLine(); 
                     playlist.searchSong(searchNumber);
                     showComplexity("O(n)");
                     break;
 
-                case 4:
+                case "Display Playlist":
                     playlist.displayPlaylist();
                     showComplexity("O(n)");
                     break;
 
-                case 5:
+                case "Play Song":
                     System.out.print("Enter Song Number to play: ");
                     int playNumber = sc.nextInt();
+                    sc.nextLine();
                     playlist.playSong(playNumber);
                     showComplexity("O(n)");
                     break;
 
-                case 6:
+                case "Next Song":
                     playlist.nextSong();
                     showComplexity("O(1)");
                     break;
 
-                case 7:
+                case "Previous Song":
                     playlist.previousSong();
                     showComplexity("O(1)");
                     break;
 
-                case 8:
+                case "Count Total Songs":
                     playlist.countTotalSongs();
                     showComplexity("O(n)");
                     break;
 
-                case 9:
+                case "Exit":
                     System.out.println("Exiting playlist. Goodbye!");
                     showComplexity("O(1)");
                     running = false;
                     break;
 
                 default:
-                    System.out.println("Invalid choice! Please enter 1-9.");
+                    System.out.println("Invalid choice! Please enter Add Song, Delete Song, Search Song, Display Playlist, Play Song, Next Song, Previous Song, Count Total Songs, or Exit.");
             }
         }
 
         sc.close();
     }
 }
+
